@@ -1,0 +1,58 @@
+<div class='container-fluid'>
+    <div class='col-md-7 flexbox'>
+      <div class='col-md-12 search-bar'>
+        <input class='form-control no-border' placeholder='Search by name' (keyup)='onStudentsSearchKeyUp($event)'>
+        <input class='form-control no-border mt-3' placeholder='Search by tags' (keyup)='onTagsSearchKeyUp($event)'>
+      </div>
+      <div class='row' *ngFor='let s of filteredStudents'>
+        <div class='col-md-2 mar-2'>
+          <div class='avatar' [ngStyle]="{'background-image': getUrl(s.pic)}"></div>
+        </div>
+        <div class='col-md-9'>
+          <div class='row pad-10'>
+            <div class='col-md-10'>
+              <h2 class='upcase'>{{s.firstName}} {{s.lastName}}</h2>
+            </div>
+
+            <div class='col-md-2'>
+              <i *ngIf="!s.found" class="fa fa-plus fa-2x" data-toggle="collapse"  
+                  data-target="#collapseGrade" aria-expanded="false" (click)="isCollapsed(s.id, true)" 
+                  [attr.aria-expanded]="!s.found" aria-controls="collapseGrade">
+              </i>
+              <i *ngIf="s.found" class="fa fa-minus fa-2x" data-toggle="collapse"  
+                  data-target="#collapseGrade" aria-expanded="false" (click)="isCollapsed(s.id, false)" 
+                  [attr.aria-expanded]="!s.found" aria-controls="collapseGrade">
+              </i>
+            </div>
+
+            <div class='col-md-12 ml-2'>
+              <div class='col-md-12 description'>Email: {{s.email}}</div>
+              <div class='col-md-12 description'>Company: {{s.company}}</div>
+              <div class='col-md-12 description'>Skill: {{s.skill}}</div>
+              <div class='col-md-12 description'>Average: {{getAvg(s.grades)}}%</div>
+
+              <div class='collapse pt-3' id='collapseGrade' [ngbCollapse]='!s.found'>
+                <div class='col-md-12 grade' *ngFor='let g of s.grades; let i = index'>
+                  Test {{i+1}}: <span class='tab'>{{g}}%</span>
+                </div>
+                <div class='row ml-0' *ngIf='s.tags'>
+                  <div class='col-md-auto p-0 mt-3 mb-1' *ngFor='let t of s.tags'>
+                    <span class="tag">{{t}}</span>
+                  </div>
+                </div>
+                <form [formGroup]="tagForm" (keyup.enter)='onTagsAddKeyUpEnter(s.id)'>
+                  <div class='col-md-auto p-0 mt-3'>
+                    <input class='form-control no-border-tag' formControlName='addTag' placeholder='Add a tag'>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class='col-md-12'><hr></div>
+
+      </div>
+    </div>
+  </div>
